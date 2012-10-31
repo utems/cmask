@@ -1,0 +1,22 @@
+ChangeLog for CMask on MacOS X
+
+To recompile:
+	cd to the source/ directory.
+	make
+
+
+2007-03-15  Anthony Kozar  <akozar@users.sourceforge.net>
+
+  I had to make a couple small changes to make this compile on MacOS X:
+
+	globals.h:  comment out #define D_MAC and uncomment #define D_IRIX.
+
+	parser.h/cpp:  rename "isnumber" function to "myisnumber" due to a 
+		conflict with the OS X ctype.h header.
+
+2009-04-19  Anthony Kozar  <akozar@users.sourceforge.net>
+
+	globals.h:  New macro MAX_FILENAME; set to 2048.
+	cmask.cpp:	parser.h:	fileio.h:	fileio.cpp:  Most filename char[] variables were only 32 or 33
+		bytes long which was easy to overflow and crash.  Replaced
+		explicit sizes with MAX_FILENAME macro.
