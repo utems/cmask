@@ -1,7 +1,7 @@
-cmask
+CMask
 =====
 
-cmask source, pre-compiled binary distributions, and install scripts
+CMask source, pre-compiled binary distributions, and install scripts
 
 
 # Original Readme
