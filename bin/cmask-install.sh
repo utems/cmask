@@ -15,7 +15,7 @@ echo "\nHi there. So you want to install cmask? Awesome! Well, let's get started
 echo "Determining how to proceed..."
 
 GITHUBDL="http://cloud.github.com/downloads/utems/cmask"
-CMVERSION="20121030"
+CMVERSION="20121101"
 TARGET="cmask"
 BASH_LOGIN=".bash_login"
 
