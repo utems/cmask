@@ -7,14 +7,14 @@
 #    Installs in /usr/local/bin and adds it to your PATH if it's not already included
 #
 # Written by Marshall Bessières
-# Last updated 10-30-2012
+# Last updated 2012-11-02
 #
 
 
 echo "\nHi there. So you want to install cmask? Awesome! Well, let's get started!!\n"
 echo "Determining how to proceed..."
 
-CMVERSION="20121101"
+CMVERSION="20121102"
 
 GITHUB="http://cloud.github.com/downloads/utems/cmask"
 DESTDIR="/usr/local/bin"

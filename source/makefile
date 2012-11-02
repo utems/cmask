@@ -1,6 +1,6 @@
 SHELL=		/bin/sh
 CC=		g++
-CFLAGS=	        -O
+CFLAGS=	        -O -mmacosx-version-min=10.5
 LIBS=		-lm
 IFLAGS=		
 NAME= 		cmask
