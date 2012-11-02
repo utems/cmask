@@ -5,4 +5,4 @@
 #
 #
 
-curl -sS "https://raw.github.com/utems/cmask/master/bin/cmask-install.sh" | sh
+curl -sS "https://raw.github.com/utems/cmask/master/cmask-install.sh" | sh
