@@ -17,7 +17,6 @@ echo "Determining how to proceed..."
 CMVERSION="20121101"
 
 GITHUB="http://cloud.github.com/downloads/utems/cmask"
-PROFILE=".bash_profile"
 DESTDIR="/usr/local/bin"
 TARGET="cmask"
 
@@ -113,25 +112,6 @@ if [ "$TARGET" != "cmask" ]; then
     sudo ln -sf $DESTDIR/$TARGET $DESTDIR/cmask
 fi
 
-# Create a .PROFILE if it doesn't exist
-if [ ! -f ~/$PROFILE ]; then
-    echo "Creating a new $PROFILE..."
-    touch ~/$PROFILE
-fi 
-
-# Check to see if /usr/local/bin is added to PATH in .PROFILE
-# If not, let's add it
-if [ ! `egrep "PATH.*$DESTDIR" ~/$PROFILE` ]; then
-    echo "Settting up your PATH so you have access to cmask..."
-    
-    # Create a comment and update the PATH and append it to .PROFILE
-    echo "
-    
-# Add DESTDIR to the PATH for cmask
-PATH=\"$DESTDIR:\$PATH\"
-" >> ~/$PROFILE
-
-fi
 
 echo "
 ===========================================
@@ -141,10 +121,6 @@ echo "
 From any directory you should be able to type:
 
     cmask inputname.cmask outputname.sco
-
-HOWEVER, before it will work, you need to copy-paste this line and hit return:
-
-    source ~/.bash_profile
 
 Enjoy!
 "
