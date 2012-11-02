@@ -14,10 +14,11 @@
 echo "\nHi there. So you want to install cmask? Awesome! Well, let's get started!!\n"
 echo "Determining how to proceed..."
 
-GITHUBDL="http://cloud.github.com/downloads/utems/cmask"
 CMVERSION="20121101"
+
+GITHUB="http://cloud.github.com/downloads/utems/cmask"
+DESTDIR="/usr/local/bin"
 TARGET="cmask"
-BASH_LOGIN=".bash_login"
 
 BIN=$1
 BIT=$2
@@ -33,7 +34,7 @@ if [ -f /usr/bin/g++ ] && [ "$BIN" == "" ]; then
     cd ~/Downloads
 
     # Downloads the source from Anthony Kozar
-    curl -#O "$GITHUBDL/cmasksource-$CMVERSION.tgz"
+    curl -#O "$GITHUB/cmasksource-$CMVERSION.tgz"
 
     # Unpacks the archive file
     tar -xzf cmasksource-$CMVERSION.tgz
@@ -57,33 +58,42 @@ else
     cd ~/Downloads
 
     echo "Downloading binaries..."
-    curl -#O "$GITHUBDL/cmaskbin-$CMVERSION.tgz"
+    curl -#O "$GITHUB/cmaskbin-$CMVERSION.tgz"
 
     tar -zxf cmaskbin-$CMVERSION.tgz
     cd cmaskbin-$CMVERSION
 
-    # Determine whether kernel is running in 64bit or 32bit
-    # Download the appropriate binary
-    echo "Determining your system type..."
-    MACHINE=`sysctl hw.machine`
-    if [ "$MACHINE" != "hw.machine: x86_64" ] || [ "$BIT" == "32" ]; then
-        echo "Using 32-bit version..."
-        TARGET="cmask32"
-    else
-        echo "Using 64-bit version..."
-        TARGET="cmask64"
+    TARGET="cmask-universal"
+
+    if [ ! -f $TARGET ] || [ "$BIT" != "" ]; then
+        # Determine whether kernel is running in 64bit or 32bit
+        # Download the appropriate binary
+        echo "Determining your system type..."
+        MACHINE=`sysctl hw.machine`
+        if [ "$MACHINE" != "hw.machine: x86_64" ] || [ "$BIT" == "32" ]; then
+            if [ "$MACHINE" != "hw.machine: i386" ]; then
+                echo "Using PPC version..."
+                TARGET="cmask-ppc"
+            else
+                echo "Using 32-bit version..."
+                TARGET="cmask-i386"
+            fi
+        else
+            echo "Using 64-bit version..."
+            TARGET="cmask-x86_64"
+        fi
     fi
 fi
 
 # Make sure the file is executable
 echo "Setting the file permission so it's executable..."
-chmod a+x cmask
+chmod a+x $TARGET
 
 # Check to see if /usr/local/bin exists
 # If it doesn't, create it (and /usr/local if necessary)
-if [ ! -d /usr/local/bin ]; then
-    echo "Creating /usr/local/bin..."
-    mkdir -p /usr/local/bin
+if [ ! -d $DESTDIR ]; then
+    echo "Creating $DESTDIR..."
+    mkdir -p $DESTDIR
 fi
 
 # Copy the cmask file into /usr/local/bin
@@ -94,45 +104,23 @@ echo "
 I'm about to ask you for your password so I can install in special places.
 Just type it, but I won't show you what you're typing. Then press return.
 "
-sudo cp $TARGET /usr/local/bin/.
+sudo cp $TARGET $DESTDIR/.
 
 # Create a symbolic link to the target if it's not already called "cmask"
 if [ "$TARGET" != "cmask" ]; then
     echo "Linking $TARGET to cmask..."
-    sudo ln -sf /usr/local/bin/$TARGET /usr/local/bin/cmask
+    sudo ln -sf $DESTDIR/$TARGET $DESTDIR/cmask
 fi
 
-# Create a .bash_login if it doesn't exist
-if [ ! -f ~/$BASH_LOGIN ]; then
-    echo "Creating a new .bash_login..."
-    touch ~/$BASH_LOGIN
-fi 
-
-# Check to see if /usr/local/bin is added to PATH in .bash_login
-# If not, let's add it
-if [ ! `egrep "PATH.*/usr/local/bin" ~/$BASH_LOGIN` ]; then
-    echo "Settting up your PATH so you have access to cmask..."
-    
-    # Create a comment and update the PATH and append it to .bash_login
-    echo "
-    
-# Add /usr/local/bin to the PATH for cmask
-PATH=\"/usr/local/bin:\$PATH\"
-" >> ~/$BASH_LOGIN
-
-    # Source the .bash_login so the updated PATH is available right now
-    echo "Sourcing your .bash_login so the PATH is ready to go..."
-    source ~/$BASH_LOGIN
-fi
 
 echo "
 ===========================================
 =============== DONE!!!!! =================
 ===========================================
 
-Now all you have to do in any directory to use cmask is type:
+From any directory you should be able to type:
 
     cmask inputname.cmask outputname.sco
-    
+
 Enjoy!
 "
