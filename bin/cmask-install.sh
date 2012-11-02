@@ -17,8 +17,9 @@ echo "Determining how to proceed..."
 CMVERSION="20121101"
 
 GITHUB="http://cloud.github.com/downloads/utems/cmask"
+PROFILE=".bash_profile"
+DESTDIR="/usr/local/bin"
 TARGET="cmask"
-BASH_LOGIN=".bash_login"
 
 BIN=$1
 BIT=$2
@@ -82,9 +83,9 @@ chmod a+x cmask
 
 # Check to see if /usr/local/bin exists
 # If it doesn't, create it (and /usr/local if necessary)
-if [ ! -d /usr/local/bin ]; then
-    echo "Creating /usr/local/bin..."
-    mkdir -p /usr/local/bin
+if [ ! -d $DESTDIR ]; then
+    echo "Creating $DESTDIR..."
+    mkdir -p $DESTDIR
 fi
 
 # Copy the cmask file into /usr/local/bin
@@ -95,35 +96,32 @@ echo "
 I'm about to ask you for your password so I can install in special places.
 Just type it, but I won't show you what you're typing. Then press return.
 "
-sudo cp $TARGET /usr/local/bin/.
+sudo cp $TARGET $DESTDIR/.
 
 # Create a symbolic link to the target if it's not already called "cmask"
 if [ "$TARGET" != "cmask" ]; then
     echo "Linking $TARGET to cmask..."
-    sudo ln -sf /usr/local/bin/$TARGET /usr/local/bin/cmask
+    sudo ln -sf $DESTDIR/$TARGET $DESTDIR/cmask
 fi
 
-# Create a .bash_login if it doesn't exist
-if [ ! -f ~/$BASH_LOGIN ]; then
-    echo "Creating a new .bash_login..."
-    touch ~/$BASH_LOGIN
+# Create a .PROFILE if it doesn't exist
+if [ ! -f ~/$PROFILE ]; then
+    echo "Creating a new $PROFILE..."
+    touch ~/$PROFILE
 fi 
 
-# Check to see if /usr/local/bin is added to PATH in .bash_login
+# Check to see if /usr/local/bin is added to PATH in .PROFILE
 # If not, let's add it
-if [ ! `egrep "PATH.*/usr/local/bin" ~/$BASH_LOGIN` ]; then
+if [ ! `egrep "PATH.*$DESTDIR" ~/$PROFILE` ]; then
     echo "Settting up your PATH so you have access to cmask..."
     
-    # Create a comment and update the PATH and append it to .bash_login
+    # Create a comment and update the PATH and append it to .PROFILE
     echo "
     
-# Add /usr/local/bin to the PATH for cmask
-PATH=\"/usr/local/bin:\$PATH\"
-" >> ~/$BASH_LOGIN
+# Add DESTDIR to the PATH for cmask
+PATH=\"$DESTDIR:\$PATH\"
+" >> ~/$PROFILE
 
-    # Source the .bash_login so the updated PATH is available right now
-    echo "Sourcing your .bash_login so the PATH is ready to go..."
-    source ~/$BASH_LOGIN
 fi
 
 echo "
@@ -131,9 +129,13 @@ echo "
 =============== DONE!!!!! =================
 ===========================================
 
-Now all you have to do in any directory to use cmask is type:
+From any directory you should be able to type:
 
     cmask inputname.cmask outputname.sco
     
+HOWEVER, before it will work, you need to copy-paste this line and hit return:
+
+    source ~/.bash_profile
+
 Enjoy!
 "
