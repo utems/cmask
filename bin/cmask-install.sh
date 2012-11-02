@@ -64,22 +64,31 @@ else
     tar -zxf cmaskbin-$CMVERSION.tgz
     cd cmaskbin-$CMVERSION
 
-    # Determine whether kernel is running in 64bit or 32bit
-    # Download the appropriate binary
-    echo "Determining your system type..."
-    MACHINE=`sysctl hw.machine`
-    if [ "$MACHINE" != "hw.machine: x86_64" ] || [ "$BIT" == "32" ]; then
-        echo "Using 32-bit version..."
-        TARGET="cmask32"
-    else
-        echo "Using 64-bit version..."
-        TARGET="cmask64"
+    TARGET="cmask-universal"
+
+    if [ ! -f $TARGET ] || [ "$BIT" != "" ]; then
+        # Determine whether kernel is running in 64bit or 32bit
+        # Download the appropriate binary
+        echo "Determining your system type..."
+        MACHINE=`sysctl hw.machine`
+        if [ "$MACHINE" != "hw.machine: x86_64" ] || [ "$BIT" == "32" ]; then
+            if [ "$MACHINE" != "hw.machine: i386" ]; then
+                echo "Using PPC version..."
+                TARGET="cmask-ppc"
+            else
+                echo "Using 32-bit version..."
+                TARGET="cmask-i386"
+            fi
+        else
+            echo "Using 64-bit version..."
+            TARGET="cmask-x86_64"
+        fi
     fi
 fi
 
 # Make sure the file is executable
 echo "Setting the file permission so it's executable..."
-chmod a+x cmask
+chmod a+x $TARGET
 
 # Check to see if /usr/local/bin exists
 # If it doesn't, create it (and /usr/local if necessary)
@@ -132,7 +141,7 @@ echo "
 From any directory you should be able to type:
 
     cmask inputname.cmask outputname.sco
-    
+
 HOWEVER, before it will work, you need to copy-paste this line and hit return:
 
     source ~/.bash_profile
