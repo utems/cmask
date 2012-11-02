@@ -14,8 +14,9 @@
 echo "\nHi there. So you want to install cmask? Awesome! Well, let's get started!!\n"
 echo "Determining how to proceed..."
 
-GITHUBDL="http://cloud.github.com/downloads/utems/cmask"
 CMVERSION="20121101"
+
+GITHUB="http://cloud.github.com/downloads/utems/cmask"
 TARGET="cmask"
 BASH_LOGIN=".bash_login"
 
@@ -33,7 +34,7 @@ if [ -f /usr/bin/g++ ] && [ "$BIN" == "" ]; then
     cd ~/Downloads
 
     # Downloads the source from Anthony Kozar
-    curl -#O "$GITHUBDL/cmasksource-$CMVERSION.tgz"
+    curl -#O "$GITHUB/cmasksource-$CMVERSION.tgz"
 
     # Unpacks the archive file
     tar -xzf cmasksource-$CMVERSION.tgz
@@ -57,7 +58,7 @@ else
     cd ~/Downloads
 
     echo "Downloading binaries..."
-    curl -#O "$GITHUBDL/cmaskbin-$CMVERSION.tgz"
+    curl -#O "$GITHUB/cmaskbin-$CMVERSION.tgz"
 
     tar -zxf cmaskbin-$CMVERSION.tgz
     cd cmaskbin-$CMVERSION
